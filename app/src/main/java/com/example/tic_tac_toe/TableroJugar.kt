@@ -8,7 +8,9 @@ import android.widget.Toast
 
 import com.example.tic_tac_toe.databinding.JugarTableroBinding
 
-class TableroJugar : AppCompatActivity() {
+
+
+class TableroJugar : AppCompatActivity(){
 
     private lateinit var binding: JugarTableroBinding
 
@@ -81,7 +83,7 @@ class TableroJugar : AppCompatActivity() {
                         for (imageView in imageViews) {
                             imageView.setOnClickListener(null)
                         }
-                    }else if(gaveOver()){
+                    }else if(gameOver()){
                         Toast.makeText(this, "¡Partida terminada en empate!", Toast.LENGTH_SHORT).show()
                     }
                     else {
@@ -93,52 +95,26 @@ class TableroJugar : AppCompatActivity() {
         }
     }
 
-    private fun gaveOver(): Boolean {
-        for (row in 0 until 3) {
-            for (col in 0 until 3) {
-                if (simbolos[row][col] == ' ') {
-                    return false
-                }
-            }
-        }
-        return true
+    private val tableroHelper = TableroOpciones()
+
+    // Resto del código de TableroJugar
+
+    private fun gameOver(): Boolean {
+        return tableroHelper.gameOver(simbolos)
     }
 
-
     private fun isCellOccupied(imageView: ImageView): Boolean {
-        val cellIndex = getCellIndex(imageView)
-        return simbolos[cellIndex.first][cellIndex.second] != ' '
+        return tableroHelper.isCellOccupied(simbolos, imageView)
     }
 
     private fun getCellIndex(imageView: ImageView): Pair<Int, Int> {
-        val id = imageView.id
-        val row = (id - R.id.imageView1) / 3
-        val col = (id - R.id.imageView1) % 3
-        return Pair(row, col)
+        return tableroHelper.getCellIndex(imageView)
     }
 
     private fun playerWon(player: Char): Boolean {
-        for (row in 0 until 3) {
-            if (simbolos[row][0] == player && simbolos[row][1] == player && simbolos[row][2] == player) {
-                return true
-            }
-        }
-
-        for (col in 0 until 3) {
-            if (simbolos[0][col] == player && simbolos[1][col] == player && simbolos[2][col] == player) {
-                return true
-            }
-        }
-
-        if (simbolos[0][0] == player && simbolos[1][1] == player && simbolos[2][2] == player) {
-            return true
-        }
-        if (simbolos[0][2] == player && simbolos[1][1] == player && simbolos[2][0] == player) {
-            return true
-        }
-
-        return false
+        return tableroHelper.playerWon(simbolos, player)
     }
+
 
 
     private fun resetGame() {

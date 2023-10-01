@@ -9,7 +9,7 @@ import com.example.tic_tac_toe.databinding.JugarIaTableroBinding
 import com.example.tic_tac_toe.databinding.JugarTableroBinding
 import kotlin.random.Random
 
-class TableroIAJugar : AppCompatActivity() {
+class TableroIAJugar : AppCompatActivity(){
 
     private lateinit var binding: JugarIaTableroBinding
 
@@ -52,42 +52,40 @@ class TableroIAJugar : AppCompatActivity() {
 
     }
 
-    
     private fun setListener() {
         for (imageView in imageViews) {
             imageView.setOnClickListener {
                 val carita = it as ImageView
                 val skull = it
 
-                if (!isCellOccupied(imageView)) {
+                if (!isCellOccupied(imageView) && !gameOver()) { // Solo permite jugar si no hay ganador ni empate
                     if (simbolo) {
                         simbolos[getCellIndex(imageView).first][getCellIndex(imageView).second] = 'O'
                         carita.setImageResource(R.drawable.caritafachera)
-                        imageView.setOnClickListener(null)
-                        botJugar(simbolo)
                     } else {
                         simbolos[getCellIndex(imageView).first][getCellIndex(imageView).second] = 'X'
                         skull.setImageResource(R.drawable.skull)
-                        imageView.setOnClickListener(null)
-                        botJugar(simbolo)
                     }
-                    if (playerWon('O')) {
-                        Toast.makeText(this, "¡Carita fachera gano!", Toast.LENGTH_SHORT).show()
-                        for (imageView in imageViews) {
-                            imageView.setOnClickListener(null)
-                        }
 
-                    }else if (playerWon('X')) {
-                        Toast.makeText(this, "¡Rip Bozo gano!", Toast.LENGTH_SHORT).show()
-                        for (imageView in imageViews) {
-                            imageView.setOnClickListener(null)
-                        }
-                    }
-                    else if(gaveOver()){
+                    imageView.setOnClickListener(null)
+
+                    if (playerWon(if (simbolo) 'O' else 'X')) {
+                        Toast.makeText(this, if (simbolo) "¡Carita fachera gano!" else "¡Rip Bozo gano!", Toast.LENGTH_SHORT).show()
+                        desactivarListeners()
+                    } else if (!gameOver()) {
+                        // El juego no terminó, permite que el bot juegue
+                        botJugar(simbolo)
+                    } else {
                         Toast.makeText(this, "¡Partida terminada en empate!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+    }
+
+    private fun desactivarListeners() {
+        for (imageView in imageViews) {
+            imageView.setOnClickListener(null)
         }
     }
 
@@ -107,59 +105,17 @@ class TableroIAJugar : AppCompatActivity() {
             }
 
             imagenTocar.performClick()
-
             imagenTocar.setOnClickListener(null)
-        }
-    }
 
-
-
-    private fun gaveOver(): Boolean {
-        for (row in 0 until 3) {
-            for (col in 0 until 3) {
-                if (simbolos[row][col] == ' ') {
-                    return false
-                }
+            if (playerWon(if (simbolo) 'X' else 'O')) {
+                Toast.makeText(this, if (simbolo) "¡Rip Bozo gano!" else "¡Carita fachera gano!", Toast.LENGTH_SHORT).show()
+                desactivarListeners()
+            } else if (gameOver()) {
+                Toast.makeText(this, "¡Partida terminada en empate!", Toast.LENGTH_SHORT).show()
             }
         }
-        return true
     }
 
-
-    private fun isCellOccupied(imageView: ImageView): Boolean {
-        val cellIndex = getCellIndex(imageView)
-        return simbolos[cellIndex.first][cellIndex.second] != ' '
-    }
-
-    private fun getCellIndex(imageView: ImageView): Pair<Int, Int> {
-        val id = imageView.id
-        val row = (id - R.id.imageView1) / 3
-        val col = (id - R.id.imageView1) % 3
-        return Pair(row, col)
-    }
-
-    private fun playerWon(player: Char): Boolean {
-        for (row in 0 until 3) {
-            if (simbolos[row][0] == player && simbolos[row][1] == player && simbolos[row][2] == player) {
-                return true
-            }
-        }
-
-        for (col in 0 until 3) {
-            if (simbolos[0][col] == player && simbolos[1][col] == player && simbolos[2][col] == player) {
-                return true
-            }
-        }
-
-        if (simbolos[0][0] == player && simbolos[1][1] == player && simbolos[2][2] == player) {
-            return true
-        }
-        if (simbolos[0][2] == player && simbolos[1][1] == player && simbolos[2][0] == player) {
-            return true
-        }
-
-        return false
-    }
 
     private fun reset() {
         for (i in 0 until 3) {
@@ -181,7 +137,24 @@ class TableroIAJugar : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private val tableroHelper = TableroOpciones()
 
+
+    private fun gameOver(): Boolean {
+        return tableroHelper.gameOver(simbolos)
+    }
+
+    private fun isCellOccupied(imageView: ImageView): Boolean {
+        return tableroHelper.isCellOccupied(simbolos, imageView)
+    }
+
+    private fun getCellIndex(imageView: ImageView): Pair<Int, Int> {
+        return tableroHelper.getCellIndex(imageView)
+    }
+
+    private fun playerWon(player: Char): Boolean {
+        return tableroHelper.playerWon(simbolos, player)
+    }
 
 
 }
