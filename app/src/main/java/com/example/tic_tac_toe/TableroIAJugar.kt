@@ -9,10 +9,9 @@ import com.example.tic_tac_toe.databinding.JugarIaTableroBinding
 import com.example.tic_tac_toe.databinding.JugarTableroBinding
 import kotlin.random.Random
 
-class TableroIAJugar : AppCompatActivity(){
+class TableroIAJugar : AppCompatActivity() {
 
     private lateinit var binding: JugarIaTableroBinding
-
 
     private var simboloInicial: Boolean = false
     private var simbolo: Boolean = false
@@ -48,8 +47,6 @@ class TableroIAJugar : AppCompatActivity(){
         }
 
         setListener()
-
-
     }
 
     private fun setListener() {
@@ -73,7 +70,6 @@ class TableroIAJugar : AppCompatActivity(){
                         Toast.makeText(this, if (simbolo) "¡Carita fachera gano!" else "¡Rip Bozo gano!", Toast.LENGTH_SHORT).show()
                         desactivarListeners()
                     } else if (!gameOver()) {
-                        // El juego no terminó, permite que el bot juegue
                         botJugar(simbolo)
                     } else {
                         Toast.makeText(this, "¡Partida terminada en empate!", Toast.LENGTH_SHORT).show()
@@ -116,7 +112,6 @@ class TableroIAJugar : AppCompatActivity(){
         }
     }
 
-
     private fun reset() {
         for (i in 0 until 3) {
             for (j in 0 until 3) {
@@ -139,7 +134,6 @@ class TableroIAJugar : AppCompatActivity(){
 
     private val tableroHelper = TableroOpciones()
 
-
     private fun gameOver(): Boolean {
         return tableroHelper.gameOver(simbolos)
     }
@@ -155,6 +149,4 @@ class TableroIAJugar : AppCompatActivity(){
     private fun playerWon(player: Char): Boolean {
         return tableroHelper.playerWon(simbolos, player)
     }
-
-
 }

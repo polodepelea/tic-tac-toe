@@ -48,7 +48,4 @@ class ElegirSimbolo : AppCompatActivity() {
         intent.putExtra("simbolo_elegido", simbolo)
         startActivity(intent)
     }
-
-
-
 }

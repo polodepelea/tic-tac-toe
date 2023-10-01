@@ -5,12 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
-
 import com.example.tic_tac_toe.databinding.JugarTableroBinding
 
-
-
-class TableroJugar : AppCompatActivity(){
+class TableroJugar : AppCompatActivity() {
 
     private lateinit var binding: JugarTableroBinding
 
@@ -78,15 +75,14 @@ class TableroJugar : AppCompatActivity(){
                             imageView.setOnClickListener(null)
                         }
 
-                    }else if (playerWon('X')) {
+                    } else if (playerWon('X')) {
                         Toast.makeText(this, "¡Rip Bozo gano!", Toast.LENGTH_SHORT).show()
                         for (imageView in imageViews) {
                             imageView.setOnClickListener(null)
                         }
-                    }else if(gameOver()){
+                    } else if (gameOver()) {
                         Toast.makeText(this, "¡Partida terminada en empate!", Toast.LENGTH_SHORT).show()
-                    }
-                    else {
+                    } else {
                         simbolo = !simbolo
                     }
 
@@ -96,8 +92,6 @@ class TableroJugar : AppCompatActivity(){
     }
 
     private val tableroHelper = TableroOpciones()
-
-    // Resto del código de TableroJugar
 
     private fun gameOver(): Boolean {
         return tableroHelper.gameOver(simbolos)
@@ -114,8 +108,6 @@ class TableroJugar : AppCompatActivity(){
     private fun playerWon(player: Char): Boolean {
         return tableroHelper.playerWon(simbolos, player)
     }
-
-
 
     private fun resetGame() {
         for (i in 0 until 3) {
@@ -134,6 +126,7 @@ class TableroJugar : AppCompatActivity(){
         setListener()
     }
 }
+
 
 
 

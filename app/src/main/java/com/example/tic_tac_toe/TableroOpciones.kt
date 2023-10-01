@@ -2,7 +2,6 @@ package com.example.tic_tac_toe
 
 import android.widget.ImageView
 
-
 class TableroOpciones {
 
     fun gameOver(simbolos: Array<CharArray>): Boolean {
@@ -51,3 +50,4 @@ class TableroOpciones {
         return false
     }
 }
+
